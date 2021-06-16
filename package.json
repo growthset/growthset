@@ -1,0 +1,18 @@
+{
+   "private": true,
+   "license": "Apache-2.0",
+   "name": "growthset",
+   "workspaces": [
+      "packages/*"
+   ],
+   "scripts": {
+     "client": "yarn workspace client start",
+     "server": "yarn workspace server start:dev",
+     "example-app": "yarn workspace example-app start",
+     "growthset": "yarn workspace growthset start",
+     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\" \"yarn example-app\" \"yarn growthset\""
+   },
+   "dependencies": {
+      "concurrently": "^5.3.0"
+   }
+}

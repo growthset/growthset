@@ -1,0 +1,37 @@
+
+type Local {
+  email: String!
+}
+
+type User {
+  "A User Object"
+  local: Local!
+}
+
+type Guide {
+  id: ID!
+  name: String!
+}
+
+type DeleteResponse {
+  success: Boolean
+  errorMessage: String
+}
+
+input GuideInput {
+  id: ID
+  name: String!
+}
+
+type Query {
+  helloWorld: String!
+  currentUser: String
+  listUsers: [User]
+  listGuides: [Guide]
+}
+
+type Mutation {
+    createGuide(guide: GuideInput!): Guide
+    updateGuide(guide: GuideInput!): Guide
+    deleteGuide(id: ID!): DeleteResponse
+}
