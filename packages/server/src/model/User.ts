@@ -1,8 +1,17 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
+interface Local {
+    email: string,
+    password: string
+}
+
+interface User {
+    local: Local
+}
+
 // define the schema for our user model
-var userSchema = new mongoose.Schema({
+var userSchema = new mongoose.Schema<User>({
     local: {
         email: String,
         password: String
@@ -17,7 +26,7 @@ userSchema.methods.generateHash = function(password: string) {
 // checking if password is valid
 userSchema.methods.validPassword = function(password: string) {
     // console.log('comparing password:' + password + "," + this.local.password);
-    return bcrypt.compareSync(password, (this as any).local.password);
+    return bcrypt.compareSync(password, this.local.password);
 };
 
 userSchema.methods.toJson = function() {
@@ -25,6 +34,13 @@ userSchema.methods.toJson = function() {
         email: (this as any).local.email
     }
 }
+
+userSchema.pre('save', function(next) {
+    if (!this.isModified('local.password')) return next();
+    // encrypt password before saving
+    this.local.password = this.generateHash(this.local.password);
+    next();
+});
 
 // create the model for users and expose it to our app
 export default mongoose.model('User', userSchema);
