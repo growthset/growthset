@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Free Template for building a SaaS application or admin dashboard using React + Material-UI"
+    />
+    <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="%PUBLIC_URL%/apple-touch-icon.png"
+    />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+
+    <!--
+      Roboto is the default font for Material-UI. Baloo+Bhaijaan is only used for the logo
+    -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Baloo+Bhaijaan|Roboto:300,400,500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- link href="shepherd.css" rel="stylesheet" / -->
+    <title>
+      WaVer - Free React template for building an SaaS or admin application
+    </title>
+  </head>
+  <body>
+    <noscript> You need to enable JavaScript to run this app. </noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+    <!-- script src="growthset.js?id=UUID" async></script -->
+    <!-- clone of Google Tag Manager.  Should also investigate how Matomo, Pendo, etc work. -->
+    <script>
+      (
+        function(w,d,s,l,i){
+          // initialize data layer on window obj
+          w[l] = w[l] || [];
+          // add a new event to the data layer, the start of load of the JS
+          w[l].push({'gtm.start' : new Date().getTime(), event: 'growthset.js'});
+          // f = the first script object found in the document?
+          var f = d.getElementsByTagName(s)[0],
+              j = d.createElement(s),
+              dl = l != 'dataLayer' ? '&l=' + l : '';
+          j.async=true;
+          j.src='growthset.js?id=' + i + dl;
+          f.parentNode.insertBefore(j, f);
+        }
+      )(window, document, 'script', 'dataLayer', 'GTM-56XP');</script>
+
+<script async src="http://localhost:5000/tracker.js" data-ackee-server="http://localhost:5000" data-ackee-domain-id="4ead782d-38ba-4c90-8c7a-11603c4a97d8" 
+  data-ackee-opts='{ "ignoreLocalhost": false, "detailed": true, "ignoreOwnVisits": false }'></script>
+
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//localhost:8080/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+  </body>
+</html>
