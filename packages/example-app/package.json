@@ -105,7 +105,7 @@
     "@testing-library/user-event": "^12.8.1"
   },
   "scripts": {
-    "start": "PORT=9999 node scripts/start.js",
+    "start": "npx cross-env PORT=9999 && node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
   },

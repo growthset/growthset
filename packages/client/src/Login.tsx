@@ -75,7 +75,7 @@ export default function Login() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in {!_.isUndefined(token) ? 'YIPPEE!' : ' Please'}
+          Sign in {!_.isUndefined(token) ? 'YIPPEE!' : ' Please!'}
         </Typography>
         <form className={classes.form} noValidate>
           <TextField

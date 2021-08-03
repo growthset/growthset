@@ -6,6 +6,7 @@ type Local {
 type User {
   "A User Object"
   local: Local!
+  role: String!
 }
 
 type Guide {
@@ -13,7 +14,17 @@ type Guide {
   name: String!
 }
 
+type Site {
+  siteURL: String!
+  id: ID!
+}
+
 type DeleteResponse {
+  success: Boolean
+  errorMessage: String
+}
+
+type ChangePasswordResponse {
   success: Boolean
   errorMessage: String
 }
@@ -23,15 +34,37 @@ input GuideInput {
   name: String!
 }
 
+input SiteInput {
+  siteURL: String!
+  id: ID
+}
+
+input LocalInput {
+  email: String!
+  password: String!
+}
+
+input UserInput {
+  local: LocalInput!
+  role: String!
+}
+
 type Query {
   helloWorld: String!
   currentUser: String
   listUsers: [User]
   listGuides: [Guide]
+  listSites: [Site]
 }
 
 type Mutation {
     createGuide(guide: GuideInput!): Guide
     updateGuide(guide: GuideInput!): Guide
+    createSite(site: SiteInput!): Site
+    createUser(user: UserInput!): User
+    updateUser(user: UserInput!): User
+    deleteUser(email: String!): DeleteResponse
+    deleteSite(siteURL: String!): DeleteResponse
     deleteGuide(id: ID!): DeleteResponse
+    changePassword(newPassword: String!, oldPassword: String!): ChangePasswordResponse
 }

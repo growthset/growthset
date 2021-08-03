@@ -124,10 +124,10 @@ app.use(passport.initialize());
 // NOTE: Have to comment out and re-enable to get GUI to show, need a better way
 // For ease of deving, include token in GET params, but disable when in "production"
 
-app.use('/graphql',  passport.authenticate('jwt', { session: false}), 
-    function(req, res, next) {
-        return next();
-    });
+  app.use('/graphql',  passport.authenticate('jwt', { session: false}), 
+      function(req, res, next) {
+          return next();
+      });
 
 server.applyMiddleware({ app, path: '/graphql' });
 

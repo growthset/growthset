@@ -54,7 +54,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={graphqlClient}>
       <QueryClientProvider client={queryClient}>
-        <App />
+       <App />
       </QueryClientProvider>
     </ApolloProvider>
   </React.StrictMode>,
