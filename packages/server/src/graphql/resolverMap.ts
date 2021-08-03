@@ -3,6 +3,7 @@ import _ from 'lodash';
 import * as typeDefs from './schema/schema.graphql';
 import UserModel from '../model/User';
 import GuideModel from '../model/Guide';
+import SiteModel from '../model/Site';
 import { AuthenticationError } from 'apollo-server';
 
 const resolverMap: IResolvers = {
@@ -26,6 +27,12 @@ const resolverMap: IResolvers = {
       }
       // TODO: Translate into public guides
       return GuideModel.find().exec();
+    },
+    listSites(ignore: void, args: void, context: any): Promise <any[]> {
+      if(_.isUndefined(context.getUser())) {
+        throw new AuthenticationError('must authenticate');
+      }
+      return SiteModel.find().exec();
     }
   },
   Mutation: {
@@ -65,7 +72,71 @@ const resolverMap: IResolvers = {
       } else {
         return {success : false, errorMessage: 'guide not found'};
       }
+    },
+    createSite: async (parent, {site}, context) => {
+      if (_.isUndefined(context.getUser())) {
+        throw new AuthenticationError('must authenticate');
+      }
+      // generate UUID - Mongoose handles this for us I believe
+  
+      const nSite = await SiteModel.create(site);
+      return nSite?.toJson();
+    },
+    deleteSite: async (parent, {siteURL}, context) => {
+      if (_.isUndefined(context.getUser())) {
+        throw new AuthenticationError('must authenticate');
+      }
+      const result = await SiteModel.deleteOne({siteURL});
+      if (result.deletedCount === 1) {
+        return {success : true};
+      } else {
+        return {success : false, errorMessage: 'site not found'};
+      }
+    },
+    deleteUser: async (parent, {email}, context) => {
+      if (_.isUndefined(context.getUser())) {
+        throw new AuthenticationError('must authenticate');
+      }
+      const result = await UserModel.deleteOne({'local.email':  email});
+      if (result.deletedCount === 1) {
+        return {success : true};
+      } else {
+        return {success : false, errorMessage: 'user not found'};
+      }
+    },
+    createUser: async (parent, {user}, context) => {
+      if (_.isUndefined(context.getUser())) {
+        throw new AuthenticationError('must authenticate');
+      }
+      // generate UUID - Mongoose handles this for us I believe
+
+      const nUser = await UserModel.create(user);
+      return nUser?.toLocalJson();
+    },
+    updateUser: async (parent, {user}, context) => {
+      if (_.isUndefined(context.getUser())) {
+        throw new AuthenticationError('must authenticate');
+      }
+      // TODO: Validation, also may need to adjust query
+      await UserModel.updateOne({_id: user.id}, {name: user.name});
+      const nUser = await UserModel.findOne({_id: user.id});
+      // NOTE: For now we return null if no user is found, we probably should throw an error.
+      return nUser?.toLocalJson();
+    },
+    changePassword: async (parent, {oldPassword, newPassword}, context) => {
+      const currentUser = context.getUser();
+      if (_.isUndefined(context.getUser())) {
+        throw new AuthenticationError('must authenticate');
+      }
+      // TODO: Validation, also may need to adjust query
+      const nUser = await UserModel.findOne({_id: currentUser.id});
+      if (nUser.validPassword(oldPassword)) {
+         nUser.changePassword(newPassword);
+         await nUser.save();
+      }
     }
-  },
+  }
+  
+
 };
 export default resolverMap;

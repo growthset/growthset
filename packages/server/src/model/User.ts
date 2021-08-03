@@ -3,11 +3,12 @@ import bcrypt from 'bcrypt';
 
 interface Local {
     email: string,
-    password: string
+    password: string,
 }
 
 interface User {
-    local: Local
+    local: Local,
+    role: string
 }
 
 // define the schema for our user model
@@ -15,7 +16,8 @@ var userSchema = new mongoose.Schema<User>({
     local: {
         email: String,
         password: String
-    }
+    },
+    role: String
 });
 
 // generating a hash
@@ -31,8 +33,21 @@ userSchema.methods.validPassword = function(password: string) {
 
 userSchema.methods.toJson = function() {
     return {
-        email: (this as any).local.email
+            email: (this as any).local.email
     }
+}
+
+userSchema.methods.toLocalJson = function() {
+    return {
+        local : {
+            email: (this as any).local.email
+        }, 
+        role: this.role
+    }
+}
+
+userSchema.methods.changePassword = function(newPassword: string) {
+    this.local.password = newPassword;
 }
 
 userSchema.pre('save', function(next) {

@@ -9,14 +9,20 @@ import { useLocation } from 'react-router-dom';
 
 import CreateGuide from './CreateGuide';
 import Guides from './Guides';
-
+import Users from './Users';
+import Analytics from './Analytics';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import Login from './Login';
+import ChangePassword from './changePassword';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link
 } from "react-router-dom";
+import { gql } from '@apollo/client';
+
 
 // import { ReactQueryDevtools } from "react-query-devtools";
 import { useToken, logout } from './util/auth';
@@ -33,18 +39,27 @@ type AppState = {
 
 }
 
-function Analytics() {
-  return <div><div> Analytics Info goes here.</div></div>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
-}
-
 function MainTabs() {
+  const GET_USERS = gql`
+  query GetUsers {
+    listUsers {
+      local {
+        email
+      },
+      role
+    }
+  }`;
   const location = useLocation();
   const allTabs = ['/', '/analytics', '/users'];
-
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  
+  const openMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  }
+  const closeMenu = () => {
+    setAnchorEl(null);
+  }
   return (
     <AppBar position="static">
         <Tabs
@@ -55,7 +70,19 @@ function MainTabs() {
           <Tab label="Guides" value="/"  component={Link} to={allTabs[0]} />
           <Tab label="Analytics" value="/analytics" component={Link} to={allTabs[1]} />
           <Tab label="Users" value="/users" component={Link} to={allTabs[2]} />
-          <Tab label="Logout" value="/logout" onClick={() => { logout() }} />
+          <Tab label="Profile" value="/logout" aria-controls="simple-menu" aria-haspopup="true" onClick={openMenu} />
+          <Menu
+            id="simple-menu"     
+            anchorEl = {anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={closeMenu}
+            onClick={closeMenu}>
+            {/*<MenuItem>Profile</MenuItem>*/}
+            <MenuItem onClick={() => setOpen(true)}>Change Password</MenuItem>
+            <MenuItem onClick={() => logout()}>Logout</MenuItem>
+            <ChangePassword open={open} setOpen={setOpen} GET_USERS={GET_USERS}></ChangePassword>
+          </Menu>
         </Tabs>
       </AppBar>
   );

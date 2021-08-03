@@ -7,50 +7,64 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
 
+
 import { gql, useMutation } from '@apollo/client';
 
-const CREATE_GUIDE = gql`
-  mutation CreateGuide($guide: GuideInput!) {
-    createGuide(guide: $guide) {
-      id
-      name
+const CREATE_USER = gql`
+  mutation CreateUser($user: UserInput!) {
+    createUser(user: $user) {
+      local {
+          email
+      },
+      role
     }
   }
 `;
-export default function CreateGuide(props: any) {
+export default function AddUser(props: any) {
 
-  // todo: type definitions - generated via server?
-  const [createGuide] = useMutation(CREATE_GUIDE, {
+  const [addUser] = useMutation(CREATE_USER, {
     refetchQueries: [
-      { query: props?.GET_GUIDES }
+      { query: props?.GET_USERS }
     ]
   }); 
-  const [name, setName] = useState('Untitled');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('User');
+
 
   const handleClose = () => {
     props.setOpen(false);
   };
 
   const handleSave = () => {
-    createGuide({variables: {guide: {name}}} as any);
+    addUser({variables: {user: { local:{email, password: "password"}, role}}} as any);
     props.setOpen(false);
   };
 
   return (<Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-  <DialogTitle id="form-dialog-title">Create Guide</DialogTitle>
+  <DialogTitle id="form-dialog-title">Add User</DialogTitle>
   <DialogContent>
     <DialogContentText>
-      Create a new guide.
+      Add a new user.
     </DialogContentText>
     <TextField
       autoFocus
       margin="dense"
-      id="name"
-      label="Name"
+      id="email"
+      label="E-mail"
       type="string"
       fullWidth
-      value={name}
-      onChange={(e) => setName(e.target.value)}
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />  
+    <TextField
+      autoFocus
+      margin="dense"
+      id="role"
+      label="role"
+      type="string"
+      fullWidth
+      value={role}
+      onChange={(e) => setRole(e.target.value)}
     />  
   </DialogContent>
   <DialogActions>
@@ -58,7 +72,7 @@ export default function CreateGuide(props: any) {
       Cancel
     </Button>
     <Button onClick={handleSave} color="primary">
-      Create
+      Add
     </Button>
   </DialogActions>
 </Dialog>);
