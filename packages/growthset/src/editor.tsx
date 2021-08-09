@@ -4,7 +4,7 @@ import { makeStyles, createMuiTheme, ThemeProvider, StylesProvider, createGenera
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+import SaveIcon from '@material-ui/icons/Save';
 // import MoreIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
@@ -15,12 +15,16 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import Button from '@material-ui/core/Button';
 import _ from 'lodash';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 // import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 // import Shepherd from 'shepherd.js';
 
 import GlobalEditor from './GlobalEditor';
 import SelectionEditor from './SelectionEditor';
+import SaveConfirmation from  './SaveConfirmation';
+
 
 import { Step, Steps, playGuide as play } from './guide';
 
@@ -73,6 +77,7 @@ const Editor = {
       const [onTop, setOnTop] = useState(true);
       const [showGlobal, setShowGlobal] = useState(false);
       const [showAttach, setShowAttach] = useState(false);
+      const [showConfirm, setShowConfirm] = useState(false);
       const [steps, setSteps] = useState<any[]>([]);
       const [showAppBar, setShowAppBar] = useState(true);
       const [currentIndex, setCurrentIndex] = useState(-1);
@@ -232,17 +237,37 @@ const Editor = {
         guideList.unshift(<IconButton color="inherit" aria-label="open drawer" onClick={() => playGuide()}><PlayArrowIcon /></IconButton>);
       }
 
+      const [anchorEl, setAnchorEl] = React.useState(null);
+
+      const openMenu = (event: any) => {
+        setAnchorEl(event.currentTarget);
+      }
+      const closeMenu = () => {
+        setAnchorEl(null);
+      }
+
+      const close = () => {};
+
       return (<div>
         <StylesProvider generateClassName={generateClassName}>
         <ThemeProvider theme={theme}>
           <GlobalEditor open={showGlobal} setOpen={setShowGlobal} createStep={(step: Step) => theSteps.createStep(step)}/>
           <SelectionEditor open={showAttach} setOpen={setShowAttach} steps={theSteps} cancel={() => setCurrentIndex(-1)}/>
-
+          <SaveConfirmation open={showConfirm} setOpen={setShowConfirm}/>
           <AppBar position="fixed" color="primary" className={showAppBar ? classes.appBar : classes.appBarHidden }>
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="open drawer">
-              <MenuIcon />
+            <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={openMenu}>
+              <MenuIcon/>
             </IconButton>
+                <Menu
+                id="simple-menu"     
+                anchorEl = {anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={closeMenu}
+                onClick={closeMenu}>
+                <MenuItem onClick={() => close()}>Close</MenuItem>
+              </Menu>
             <Button
               variant="contained"
               color="default"
@@ -263,8 +288,8 @@ const Editor = {
             </Button>
             { guideList }
             <div className={classes.grow} />
-            <IconButton color="inherit">
-              <SearchIcon />
+            <IconButton color="inherit" onClick={() => setShowConfirm(true)}>
+              <SaveIcon />
             </IconButton>
             <IconButton edge="end" color="inherit" onClick={() => setOnTop(!onTop)}>
               {onTop ? (<ArrowDownwardIcon />) : (<ArrowUpwardIcon />)}

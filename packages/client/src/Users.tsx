@@ -12,12 +12,22 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    padding: {
+      padding: "25px"
+    }
+    }),
+  );
 
 const MainDiv = styled('div')`
   padding: 20px;
 `
 
 export default function Users(props: any) {
+    const classes = useStyles();
     const [openCreate, setOpenCreate] = React.useState(false);
 
     const DELETE_USER = gql`
@@ -50,7 +60,7 @@ export default function Users(props: any) {
         deleteUser({variables: {email: userEmail}} as any);
       }
       const list = data?.listUsers?.map((item: any) => {
-        return <TableRow> <TableCell component="th" scope="row">{item.local.email}</TableCell> <TableCell component="td">{item.role}</TableCell> 
+        return <TableRow> <TableCell component="th" scope="row" className={classes.padding}>{item.local.email}</TableCell> <TableCell component="td">{item.role}</TableCell> 
         { item.role != "admin" ? <TableCell component="td"> <IconButton onClick={() => removeUser(item.local.email)}> <DeleteIcon></DeleteIcon> </IconButton> </TableCell> : <TableCell></TableCell>}</TableRow>
       })
     const mainDiv = (<MainDiv>

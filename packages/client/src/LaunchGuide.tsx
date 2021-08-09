@@ -6,13 +6,26 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+
 import * as uuidBase62 from 'uuid62';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { List } from '@material-ui/core';
 import AddSite from './AddSite';
 import { gql, useQuery, useMutation } from '@apollo/client';
+import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
+import { ClassNames } from '@emotion/react';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      width: "275px"
+    }
+    }),
+  );
 const DELETE_SITE = gql`
 mutation DeleteSite ($siteURL: String!) {
   deleteSite (siteURL: $siteURL) {
@@ -48,6 +61,8 @@ export default function LaunchGuide(props: any) {
   };
   // todo: type definitions - generated via server?
   const [url, setUrl] = useState('');
+  const classes = useStyles();
+
 
   const handleClose = () => {
     props.setOpen(false);
@@ -57,8 +72,23 @@ export default function LaunchGuide(props: any) {
     // TODO: Open new window based on entered URL
     // generate short UUID
 
-    const id = '467t44649673';
-    
+    let idString = '';
+    const base64 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
+                    "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                    "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
+                    "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+                    "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
+                    "Y", "Z"
+                  ];
+    for (let i = 0; i < 12; i++) {
+      idString = idString + base64[Math.floor(Math.random() * 64)];
+    }
+
+    const id = idString;
+    console.log("ID: " + idString);
+
+
     const w = window.open(url + "#odapEditor" + id);
     window.addEventListener('message', m => {
       console.log('handleLaunch: received message: ' + m);
@@ -82,7 +112,7 @@ export default function LaunchGuide(props: any) {
   };
   return (<div>{loading ? 'Loading... ' : (error ? `Error! ${error.message}` : <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
   <DialogTitle id="form-dialog-title">Launch Guide</DialogTitle>
-  <DialogContent>
+  <DialogContent className={classes.formControl}>
     <DialogContentText>
       Develop your guide.
     </DialogContentText>
@@ -97,16 +127,16 @@ export default function LaunchGuide(props: any) {
     onChange={handleChange}>
       {list}
     </Select>
-    <Button onClick={() => setOpenURL(true)} color="primary">
-      + Add New Site
-    </Button>
-    <AddSite open={openURL} setOpen={setOpenURL} GET_SITES={GET_SITES}></AddSite>
-    <br></br>
+    <IconButton onClick={() => setOpenURL(true)} color="primary">
+      +
+    </IconButton>
+    <AddSite open={openURL} setOpen={setOpenURL} GET_SITES={GET_SITES} style={{flex: 1}}></AddSite>
     { url ?
-    <Button onClick={handleRemove} color="primary">
-      X Remove Selected Site
-    </Button>
+    <IconButton onClick={handleRemove} color="primary">
+      <DeleteIcon></DeleteIcon>
+    </IconButton>
     : null}
+    
   </DialogContent>
   <DialogActions>
     <Button onClick={handleClose} color="primary">

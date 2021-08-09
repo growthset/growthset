@@ -11,6 +11,9 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
+
+
 
 
 
@@ -19,10 +22,20 @@ import { gql, useQuery, useMutation } from '@apollo/client';
 import { isContext } from 'vm';
 
 
-
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    marginTop: {
+      marginTop: "25px"
+    },
+    marginBottom: {
+      marginBottom: "-5px"
+    }
+    }),
+  );
 
 
 export default function ChangePassword(props: any) {
+  const classes = useStyles();
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPassword2, setNewPassword2] = useState('');
@@ -71,7 +84,7 @@ export default function ChangePassword(props: any) {
   <DialogTitle id="form-dialog-title">Change Password</DialogTitle>
   <DialogContent>
     <form noValidate autoComplete="off">
-      <InputLabel htmlFor="old-password">Old Password</InputLabel>
+      <InputLabel htmlFor="old-password" className={classes.marginBottom}>Old Password</InputLabel>
        <Input
             id="old-password"
             type={showPassword ? 'text' : 'password'}
@@ -89,7 +102,7 @@ export default function ChangePassword(props: any) {
               </InputAdornment>
             }
           />
-      <InputLabel htmlFor="new-password">New Password</InputLabel>
+      <InputLabel htmlFor="new-password" className={`${classes.marginTop} ${classes.marginBottom}`}>New Password</InputLabel>
         <Input
              error={errorMsg != ''}
               id="new-password"
@@ -108,7 +121,7 @@ export default function ChangePassword(props: any) {
                 </InputAdornment>
               }
             />
-      <InputLabel htmlFor="new-password2">Repeat New Password</InputLabel>
+      <InputLabel htmlFor="new-password2" className={`${classes.marginTop} ${classes.marginBottom}`}>Repeat New Password</InputLabel>
        <Input
             error={errorMsg != ''}
             id="new-password2"
